@@ -1,20 +1,19 @@
 {
-  "name": "@uniswap/swap-router-contracts",
-  "description": "Smart contracts for swapping on Uniswap V2 and V3",
+  "name": "@ethaf/swap-router-contracts",
+  "description": "Smart contracts for swapping on ETH AF",
   "license": "GPL-2.0-or-later",
   "publishConfig": {
     "access": "public"
   },
-  "version": "1.3.1",
-  "homepage": "https://uniswap.org",
+  "version": "1.0.0",
+  "homepage": "https://ethaf.xyz",
   "keywords": [
-    "uniswap",
-    "v2",
-    "v3"
+    "ethaf",
+    "router"
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/Uniswap/swap-router-contracts"
+    "url": "https://github.com/eth-af/swap-router-contracts"
   },
   "files": [
     "contracts/base",
