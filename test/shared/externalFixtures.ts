@@ -152,7 +152,11 @@ export const v3RouterFixture: Fixture<{
     factoryV2.address,
     factory.address,
     nft.address,
-    weth9.address
+    weth9.address,
+    mockBlast.address,
+    mockBlastPoints.address,
+    gasCollector,
+    pointsOperator
   )) as MockTimeSwapRouter02
 
   return { weth9, factoryV2, factory, nft, router }
