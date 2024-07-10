@@ -2,15 +2,15 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '@uniswap/v3-periphery/contracts/base/PeripheryImmutableState.sol';
-import '@uniswap/v3-core/contracts/libraries/SafeCast.sol';
-import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
-import '@uniswap/v3-core/contracts/libraries/TickBitmap.sol';
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
-import '@uniswap/v3-core/contracts/interfaces/callback/IUniswapV3SwapCallback.sol';
-import '@uniswap/v3-periphery/contracts/libraries/Path.sol';
-import '@uniswap/v3-periphery/contracts/libraries/PoolAddress.sol';
-import '@uniswap/v3-periphery/contracts/libraries/CallbackValidation.sol';
+import '@ethaf/ethaf-periphery/contracts/base/PeripheryImmutableState.sol';
+import '@ethaf/ethaf-core/contracts/libraries/SafeCast.sol';
+import '@ethaf/ethaf-core/contracts/libraries/TickMath.sol';
+import '@ethaf/ethaf-core/contracts/libraries/TickBitmap.sol';
+import '@ethaf/ethaf-core/contracts/interfaces/IEthAfPool.sol';
+import '@ethaf/ethaf-core/contracts/interfaces/callback/IEthAfSwapCallback.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/Path.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/PoolAddress.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/CallbackValidation.sol';
 import '@uniswap/v2-core/contracts/interfaces/IUniswapV2Pair.sol';
 
 import '../base/ImmutableState.sol';
@@ -23,10 +23,10 @@ import '../libraries/UniswapV2Library.sol';
 /// @notice Does not support exact output swaps since using the contract balance between exactOut swaps is not supported
 /// @dev These functions are not gas efficient and should _not_ be called on chain. Instead, optimistically execute
 /// the swap and check the amounts in the callback.
-contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, PeripheryImmutableState {
+contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IEthAfSwapCallback, PeripheryImmutableState {
     using Path for bytes;
     using SafeCast for uint256;
-    using PoolTicksCounter for IUniswapV3Pool;
+    using PoolTicksCounter for IEthAfPool;
     address public immutable factoryV2;
     /// @dev Value to bit mask with path fee to determine if V2 or V3 route
     // max V3 fee:           000011110100001001000000 (24 bits)
@@ -48,8 +48,8 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         address tokenA,
         address tokenB,
         uint24 fee
-    ) private view returns (IUniswapV3Pool) {
-        return IUniswapV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
+    ) private view returns (IEthAfPool) {
+        return IEthAfPool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
     }
 
     /// @dev Given an amountIn, fetch the reserves of the V2 pair and get the amountOut
@@ -62,8 +62,8 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         return UniswapV2Library.getAmountOut(amountIn, reserveIn, reserveOut);
     }
 
-    /// @inheritdoc IUniswapV3SwapCallback
-    function uniswapV3SwapCallback(
+    /// @inheritdoc IEthAfSwapCallback
+    function ethafSwapCallback(
         int256 amount0Delta,
         int256 amount1Delta,
         bytes memory path
@@ -77,7 +77,7 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
                 ? (tokenIn < tokenOut, uint256(-amount1Delta))
                 : (tokenOut < tokenIn, uint256(-amount0Delta));
 
-        IUniswapV3Pool pool = getPool(tokenIn, tokenOut, fee);
+        IEthAfPool pool = getPool(tokenIn, tokenOut, fee);
         (uint160 v3SqrtPriceX96After, int24 tickAfter, , , , , ) = pool.slot0();
 
         if (isExactInput) {
@@ -116,7 +116,7 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
 
     function handleV3Revert(
         bytes memory reason,
-        IUniswapV3Pool pool,
+        IEthAfPool pool,
         uint256 gasEstimate
     )
         private
@@ -150,7 +150,7 @@ contract MixedRouteQuoterV1 is IMixedRouteQuoterV1, IUniswapV3SwapCallback, Peri
         )
     {
         bool zeroForOne = params.tokenIn < params.tokenOut;
-        IUniswapV3Pool pool = getPool(params.tokenIn, params.tokenOut, params.fee);
+        IEthAfPool pool = getPool(params.tokenIn, params.tokenOut, params.fee);
 
         uint256 gasBefore = gasleft();
         try

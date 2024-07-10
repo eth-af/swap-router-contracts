@@ -2,14 +2,14 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '@uniswap/v3-periphery/contracts/base/PeripheryImmutableState.sol';
-import '@uniswap/v3-core/contracts/libraries/SafeCast.sol';
-import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
-import '@uniswap/v3-core/contracts/interfaces/callback/IUniswapV3SwapCallback.sol';
-import '@uniswap/v3-periphery/contracts/libraries/Path.sol';
-import '@uniswap/v3-periphery/contracts/libraries/PoolAddress.sol';
-import '@uniswap/v3-periphery/contracts/libraries/CallbackValidation.sol';
+import '@ethaf/ethaf-periphery/contracts/base/PeripheryImmutableState.sol';
+import '@ethaf/ethaf-core/contracts/libraries/SafeCast.sol';
+import '@ethaf/ethaf-core/contracts/libraries/TickMath.sol';
+import '@ethaf/ethaf-core/contracts/interfaces/IEthAfPool.sol';
+import '@ethaf/ethaf-core/contracts/interfaces/callback/IEthAfSwapCallback.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/Path.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/PoolAddress.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/CallbackValidation.sol';
 
 import '../interfaces/IQuoter.sol';
 
@@ -17,7 +17,7 @@ import '../interfaces/IQuoter.sol';
 /// @notice Allows getting the expected amount out or amount in for a given swap without executing the swap
 /// @dev These functions are not gas efficient and should _not_ be called on chain. Instead, optimistically execute
 /// the swap and check the amounts in the callback.
-contract Quoter is IQuoter, IUniswapV3SwapCallback, PeripheryImmutableState {
+contract Quoter is IQuoter, IEthAfSwapCallback, PeripheryImmutableState {
     using Path for bytes;
     using SafeCast for uint256;
 
@@ -30,12 +30,12 @@ contract Quoter is IQuoter, IUniswapV3SwapCallback, PeripheryImmutableState {
         address tokenA,
         address tokenB,
         uint24 fee
-    ) private view returns (IUniswapV3Pool) {
-        return IUniswapV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
+    ) private view returns (IEthAfPool) {
+        return IEthAfPool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
     }
 
-    /// @inheritdoc IUniswapV3SwapCallback
-    function uniswapV3SwapCallback(
+    /// @inheritdoc IEthAfSwapCallback
+    function ethafSwapCallback(
         int256 amount0Delta,
         int256 amount1Delta,
         bytes memory path

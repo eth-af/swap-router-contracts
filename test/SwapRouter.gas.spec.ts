@@ -1,10 +1,10 @@
 import { defaultAbiCoder } from '@ethersproject/abi'
-import { abi as IUniswapV3PoolABI } from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
+import { abi as IEthAfPoolABI } from '@ethaf/ethaf-core/artifacts/contracts/interfaces/IEthAfPool.sol/IEthAfPool.json'
 import { Fixture } from 'ethereum-waffle'
 import { BigNumber, constants, ContractTransaction, Wallet } from 'ethers'
 import { solidityPack } from 'ethers/lib/utils'
 import { ethers, waffle } from 'hardhat'
-import { IUniswapV3Pool, IWETH9, MockTimeSwapRouter02, TestERC20 } from '../typechain'
+import { IEthAfPool, IWETH9, MockTimeSwapRouter02, TestERC20 } from '../typechain'
 import completeFixture from './shared/completeFixture'
 import { ADDRESS_THIS, FeeAmount, MSG_SENDER, TICK_SPACINGS } from './shared/constants'
 import { encodePriceSqrt } from './shared/encodePriceSqrt'
@@ -23,7 +23,7 @@ describe('SwapRouter gas tests', function () {
     weth9: IWETH9
     router: MockTimeSwapRouter02
     tokens: [TestERC20, TestERC20, TestERC20]
-    pools: [IUniswapV3Pool, IUniswapV3Pool, IUniswapV3Pool]
+    pools: [IEthAfPool, IEthAfPool, IEthAfPool]
   }> = async (wallets, provider) => {
     const { weth9, factory, router, tokens, nft } = await completeFixture(wallets, provider)
 
@@ -81,10 +81,10 @@ describe('SwapRouter gas tests', function () {
       factory.getPool(weth9.address, tokens[0].address, FeeAmount.MEDIUM),
     ])
 
-    const pools = poolAddresses.map((poolAddress) => new ethers.Contract(poolAddress, IUniswapV3PoolABI, wallet)) as [
-      IUniswapV3Pool,
-      IUniswapV3Pool,
-      IUniswapV3Pool
+    const pools = poolAddresses.map((poolAddress) => new ethers.Contract(poolAddress, IEthAfPoolABI, wallet)) as [
+      IEthAfPool,
+      IEthAfPool,
+      IEthAfPool
     ]
 
     return {
@@ -98,7 +98,7 @@ describe('SwapRouter gas tests', function () {
   let weth9: IWETH9
   let router: MockTimeSwapRouter02
   let tokens: [TestERC20, TestERC20, TestERC20]
-  let pools: [IUniswapV3Pool, IUniswapV3Pool, IUniswapV3Pool]
+  let pools: [IEthAfPool, IEthAfPool, IEthAfPool]
 
   let loadFixture: ReturnType<typeof waffle.createFixtureLoader>
 
@@ -291,7 +291,7 @@ describe('SwapRouter gas tests', function () {
     })
 
     it('0 -> 1 minimal', async () => {
-      const calleeFactory = await ethers.getContractFactory('TestUniswapV3Callee')
+      const calleeFactory = await ethers.getContractFactory('TestEthAfCallee')
       const callee = await calleeFactory.deploy()
 
       await tokens[0].connect(trader).approve(callee.address, constants.MaxUint256)

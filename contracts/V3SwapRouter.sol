@@ -2,12 +2,12 @@
 pragma solidity =0.7.6;
 pragma abicoder v2;
 
-import '@uniswap/v3-core/contracts/libraries/SafeCast.sol';
-import '@uniswap/v3-core/contracts/libraries/TickMath.sol';
-import '@uniswap/v3-core/contracts/interfaces/IUniswapV3Pool.sol';
-import '@uniswap/v3-periphery/contracts/libraries/Path.sol';
-import '@uniswap/v3-periphery/contracts/libraries/PoolAddress.sol';
-import '@uniswap/v3-periphery/contracts/libraries/CallbackValidation.sol';
+import '@ethaf/ethaf-core/contracts/libraries/SafeCast.sol';
+import '@ethaf/ethaf-core/contracts/libraries/TickMath.sol';
+import '@ethaf/ethaf-core/contracts/interfaces/IEthAfPool.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/Path.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/PoolAddress.sol';
+import '@ethaf/ethaf-periphery/contracts/libraries/CallbackValidation.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
 import './interfaces/IV3SwapRouter.sol';
@@ -33,8 +33,8 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
         address tokenA,
         address tokenB,
         uint24 fee
-    ) private view returns (IUniswapV3Pool) {
-        return IUniswapV3Pool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
+    ) private view returns (IEthAfPool) {
+        return IEthAfPool(PoolAddress.computeAddress(factory, PoolAddress.getPoolKey(tokenA, tokenB, fee)));
     }
 
     struct SwapCallbackData {
@@ -42,8 +42,8 @@ abstract contract V3SwapRouter is IV3SwapRouter, PeripheryPaymentsWithFeeExtende
         address payer;
     }
 
-    /// @inheritdoc IUniswapV3SwapCallback
-    function uniswapV3SwapCallback(
+    /// @inheritdoc IEthAfSwapCallback
+    function ethafSwapCallback(
         int256 amount0Delta,
         int256 amount1Delta,
         bytes calldata _data
