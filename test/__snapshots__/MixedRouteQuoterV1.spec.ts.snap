@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 0 -> 2 -> 1 1`] = `300377`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 0 -> 2 cross 0 tick, starting tick initialized 1`] = `131946`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 0 -> 2 cross 0 tick, starting tick not initialized 1`] = `113081`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 0 -> 2 cross 1 tick 1`] = `157132`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 0 -> 2 cross 2 tick 1`] = `194707`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 0 -> 2 cross 2 tick where after is initialized 1`] = `157170`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 2 -> 0 cross 0 tick, starting tick initialized 1`] = `105966`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 2 -> 0 cross 0 tick, starting tick not initialized 1`] = `105966`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 2 -> 0 cross 2 1`] = `187571`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 2 -> 0 cross 2 where tick after is initialized 1`] = `187585`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInput V3 only 2 -> 1 1`] = `105674`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInputSingle V3 0 -> 2 1`] = `194698`;
+
+exports[`MixedRouteQuoterV1 quotes #quoteExactInputSingle V3 2 -> 0 1`] = `187552`;
